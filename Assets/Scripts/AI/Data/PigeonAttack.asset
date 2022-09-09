@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fee320ab8cd47e44cb0be243bbc1485c, type: 3}
+  m_Name: PigeonAttack
+  m_EditorClassIdentifier: 
+  attackRange: 1.5
+  rotationSpeed: 20
+  skill: {fileID: 3416384938457418977, guid: b0dd6345e5a16904c9f1ed4360a391f5, type: 3}

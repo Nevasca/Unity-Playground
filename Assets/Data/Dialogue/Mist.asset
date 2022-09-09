@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e75c09730f7cd249b5242c3ad68a63b, type: 3}
+  m_Name: Mist
+  m_EditorClassIdentifier: 
+  npcName: Mist
+  npcColor: {r: 0.6662958, g: 0.83020055, b: 0.8773585, a: 1}
+  npcNameColor: {r: 0.11895, g: 0.26365554, b: 0.305, a: 1}
+  voicePitch: 0.8

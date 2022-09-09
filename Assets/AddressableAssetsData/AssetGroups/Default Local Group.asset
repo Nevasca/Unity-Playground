@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c429aedf91d7bcb429159dc5bc4458bb
+  m_SerializeEntries:
+  - m_GUID: 035ad60cf975c954c877c6ee0efca6a0
+    m_Address: Assets/RAMDevour.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 331393c04f779bf4cb41bbbe41a60acc
+    m_Address: VFX/VFX_GunMuzzleFlash.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8705d6f45f72be94da86b4a79783cd56
+    m_Address: VFX/VFX_GunHit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 0a5df2a2ff1a6ce499eb7cd24481ff9d, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b84b917c1ffc02e479bfe104a464ede9, type: 2}
+    - {fileID: 11400000, guid: 94141e999097c1b47838d2ec15cfd5d8, type: 2}

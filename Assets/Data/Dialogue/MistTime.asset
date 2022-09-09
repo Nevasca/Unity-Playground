@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2472b476d75cc0b459686f95b7772b1d, type: 3}
+  m_Name: MistTime
+  m_EditorClassIdentifier: 
+  conversationBlock:
+  - <emotion=thoughtful><speed=40>I'm looking for a <color=#087AB2>blue bird</color>...
+  - <emotion=angry><speed=60>I don't have time for you.<pause=0.5> Go away!

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: badbe7281bf5739419fd09a4e16ed292
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _target: {instanceID: 0}
+  - _clipFocused: {fileID: 8300000, guid: bc0e03a7ce7bcba47a91007a0d0dd4d6, type: 3}
+  - _clipIdClick: {fileID: 8300000, guid: 0f20c2fce18cba74fa31f1efc98a996c, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
