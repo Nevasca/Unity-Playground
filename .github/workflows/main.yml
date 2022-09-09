@@ -1,0 +1,179 @@
+name: Game Actions 🎮
+
+env:
+  project_name: UnityPlayground
+  unity_version: 2021.3.1f1
+
+on:   
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+      
+  workflow_dispatch:
+
+jobs:    
+  buildForLinuxBasedPlatforms:
+    name: (Linux) Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64
+          - WebGL
+          - StandaloneWindows
+          - StandaloneWindows64
+          # - iOS
+          # - Android
+    outputs:
+      buildVersion: ${{ steps.build.outputs.buildVersion }}      
+    steps:      
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache
+        uses: actions/cache@v2
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+
+      - name: Cache Library folder
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      
+      - name: Run build
+        uses: game-ci/unity-builder@v2
+        id: build
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: ${{ env.unity_version }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: ${{ env.project_name }}
+          versioning: Semantic
+            
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+          
+  removeDebugFolders:
+    needs: [buildForLinuxBasedPlatforms]
+    name: Remove debug folders for ${{ matrix.targetPlatform }}    
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:        
+        targetPlatform:          
+          - StandaloneWindows
+          - StandaloneWindows64
+          - StandaloneLinux64          
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+                  
+       # Newer Unity versions generate debug folders that should not be shipped, thanks to that, we need to remove it first
+      - name: Remove Burst debug folder
+        uses: JesseTG/rm@v1.0.2        
+        with:
+          path: build/${{ matrix.targetPlatform }}/${{ env.project_name }}_BurstDebugInformation_DoNotShip
+          
+#      - name: Remove IL2CPP debug folder
+#        uses: JesseTG/rm@v1.0.2
+#        if: matrix.targetPlatform != 'WebGL' # WebGL builds do not generate debug folders
+#        with:
+#          path: build/${{ matrix.targetPlatform }}/${{ env.project_name }}_BackUpThisFolder_ButDontShipItWithYourGame
+
+      - name: Upload final build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.targetPlatform }}-release
+          path: build/${{ matrix.targetPlatform }}
+            
+      - name: Delete old build artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: ${{ matrix.targetPlatform }}
+          
+  deployToItchioStandalone:
+    needs: [buildForLinuxBasedPlatforms, removeDebugFolders]
+    name: Deploy to itch.io for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:        
+        targetPlatform:          
+          - StandaloneWindows
+          - StandaloneWindows64
+          - StandaloneLinux64          
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.targetPlatform }}-release
+          path: build/${{ matrix.targetPlatform }}
+                  
+      - name: Upload to itch.io
+        uses: robpc/itchio-upload-action@v1
+        with:
+          path: build/${{ matrix.targetPlatform }}
+          project: ${{ secrets.ITCHIO_PROJECT_NAME }}
+          channel: ${{ matrix.targetPlatform }}
+          version: ${{ needs.buildForLinuxBasedPlatforms.outputs.buildVersion }}
+          api-key: ${{ secrets.ITCHIO_API_KEY }}
+          
+  deployToItchioWebGL:
+    needs: [buildForLinuxBasedPlatforms, removeDebugFolders]
+    name: Deploy to itch.io for WebGL
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:        
+        targetPlatform:          
+          - WebGL
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+                  
+      - name: Upload to itch.io
+        uses: robpc/itchio-upload-action@v1
+        with:
+          path: build/${{ matrix.targetPlatform }}
+          project: ${{ secrets.ITCHIO_PROJECT_NAME }}
+          channel: ${{ matrix.targetPlatform }}
+          version: ${{ needs.buildForLinuxBasedPlatforms.outputs.buildVersion }}
+          api-key: ${{ secrets.ITCHIO_API_KEY }}
